@@ -67,14 +67,37 @@ class Area
     $this->area[$row][$col]=null;
    }
 
+   function getRowNum()
+   {
+    return $this->row;
+   }
+   function getColNum()
+   {
+    return $this->col;
+   }
+   
+   
+   
    private function overlap($original,$gotValue)
    {
-    if ($gotValue>$original) {
-        $gotValue=($gotValue%($original))-$original;
+    if ($gotValue>=0) {
+        if ($gotValue>$original) {
+            $gotValue=($gotValue%($original))-$original-1;
+        }
+        else{
+            $gotValue=$gotValue%($original+1);
+        }
     }
     else{
-        $gotValue=$gotValue%($original+1);
+        $gotValue=$gotValue*(-1);
+        if ($gotValue>$original) {
+            $gotValue=(-1)*(($gotValue%($original))-$original-1);
+        }
+        else{
+            $gotValue=$gotValue%($original+1);
+        }
     }
+    
     return $gotValue;
 
    }
