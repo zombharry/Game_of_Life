@@ -1,5 +1,4 @@
 <?php
-require 'Cell.php';
 
 /*
 $test=new Cell();
@@ -52,21 +51,9 @@ class Area
 
    function getItem(int $row,int $col)
    {
-    if ($row>$this->$row) {
-        $row=($row%($this->row))-$row;
-    }
-    else
-    {
-        $row=$row%($this->row);
-    }
+    $row=$this->overlap($this->row,$row);
 
-    if ($col>$this->$col) {
-        $col=($col%($this->col))-$col;
-    }
-    else
-    {
-        $col=$col%($this->col);
-    }
+    $col=$this->overlap($this->col,$col);
     
     return $this->area[$row][$col];
    }
@@ -80,9 +67,18 @@ class Area
     $this->area[$row][$col]=null;
    }
 
+   private function overlap($original,$gotValue)
+   {
+    if ($gotValue>$original) {
+        $gotValue=($gotValue%($original))-$original;
+    }
+    else{
+        $gotValue=$gotValue%($original+1);
+    }
+    return $gotValue;
+
+   }
+
 }
 
-
-
-var_dump(27%25);
 ?>
