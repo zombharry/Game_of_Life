@@ -7,6 +7,8 @@ require 'Cell.php';
 class Game 
 {
     public $map;
+    public $dyingRule=array(1,4,5,6,7);
+    public $reviveRule=array(3);
     function __construct()
     {
         $this->map=new Area(4,4);
@@ -69,6 +71,15 @@ class Game
         $numberOfLiving=$numberOfLiving+$this->checkThreeInRow($row-1,$col-1);
         
         return $numberOfLiving;
+    }
+
+    function ruleCheck(int $row,int $col){
+        if (in_array($this->checkArea($row,$col),$this->dyingRule)) {
+            $this->map->getItem($row,$col)->setToDead();
+        }
+        elseif (in_array($this->checkArea($row,$col),$this->reviveRule)) {
+            $this->map->getItem($row,$col)->setToAlive();
+        }
     }
 
 }
