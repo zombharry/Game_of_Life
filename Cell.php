@@ -10,15 +10,8 @@ class Cell {
         $this->alive=false;
         $this->changing=false;
     }
-
-    public function setToDead()
-    {
-        $this->alive=false;
-    }
-    public function setToAlive()
-    {
-        $this->alive=true;
-    }
+    
+    
     public function getCellStatus()
     {
         return $this->alive;
@@ -27,6 +20,16 @@ class Cell {
     {
         return $this->alive;
     }
+
+    public function changeStatus(){
+        if ($this->alive==false) {
+            $this->alive=true;
+        }
+        else{
+            $this->alive=false;
+        }
+    }
+
     public function changeChanging()
     {
         if ($this->changing==false) {

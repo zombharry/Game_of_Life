@@ -7,11 +7,13 @@ require 'Cell.php';
 class Game 
 {
     public $map;
-    public $dyingRule=array(1,4,5,6,7);
-    public $reviveRule=array(3);
-    function __construct()
+    public $dyingRule;
+    public $reviveRule;
+    function __construct(int $rownum,int $colnum, array $dyingArray,array $revivingArray)
     {
-        $this->map=new Area(4,4);
+        $this->map=new Area($rownum,$colnum);
+        $this->dyingRule=$dyingArray;
+        $this->reviveRule=$revivingArray;
         $negativerow=$this->map->getRowNum()*(-1);
         $negativecol=$this->map->getColNum()*(-1);
 
@@ -29,14 +31,7 @@ class Game
 ///////////////////////////////////////////////////////
 
 
-//TODO  
-// SET UP THE RULES, NEXT GENERATION
 
-
-    //CSAK TESZTELÉSRE!!!
-    function setToAlive(int $row,int $col){
-        $this->map->getItem($row,$col)->setToAlive();
-    }
 
     function checkThreeInRow(int $row,int $col)
     {
@@ -75,20 +70,29 @@ class Game
 
     function ruleCheck(int $row,int $col){
         if (in_array($this->checkArea($row,$col),$this->dyingRule)) {
-            $this->map->getItem($row,$col)->setToDead();
+            $this->map->getItem($row,$col)->changeChanging();
         }
         elseif (in_array($this->checkArea($row,$col),$this->reviveRule)) {
-            $this->map->getItem($row,$col)->setToAlive();
+            $this->map->getItem($row,$col)->changeChanging();
+        }
+    }
+    function endRound()
+    {
+        $negativerow=$this->map->getRowNum()*(-1);
+        $negativecol=$this->map->getColNum()*(-1);
+
+        for ($i=$negativerow; $i <=$this->map->getRowNum(); $i++) 
+        { 
+            for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
+                if ($this->map->getItem($i,$j)->getChanging()) {
+
+                    $this->map->getItem($i,$j)->changeStatus();
+                }
+            }
         }
     }
 
+
 }
 
-$game=new Game();
-$game->setToAlive(2,4);
-$game->setToAlive(3,4);
-$game->setToAlive(4,4);
-$game->setToAlive(3,5);
-
-var_dump($game->checkArea(3,5));
 ?>
