@@ -7,12 +7,12 @@ require 'Cell.php';
 class Game 
 {
     public $map;
-    public $dyingRule;
+    public $livingRule;
     public $reviveRule;
-    function __construct(int $rownum,int $colnum, array $dyingArray,array $revivingArray)
+    function __construct(int $rownum,int $colnum, array $livingArray,array $revivingArray)
     {
         $this->map=new Area($rownum,$colnum);
-        $this->dyingRule=$dyingArray;
+        $this->livingRule=$livingArray;
         $this->reviveRule=$revivingArray;
         $negativerow=$this->map->getRowNum()*(-1);
         $negativecol=$this->map->getColNum()*(-1);
@@ -69,10 +69,12 @@ class Game
     }
 
     function ruleCheck(int $row,int $col){
-        if (in_array($this->checkArea($row,$col),$this->dyingRule)) {
+        if ($this->map->getItem($row,$col)->getCellStatus()==true &&
+            !(in_array($this->checkArea($row,$col),$this->livingRule))) {
             $this->map->getItem($row,$col)->changeChanging();
         }
-        elseif (in_array($this->checkArea($row,$col),$this->reviveRule)) {
+        elseif ($this->map->getItem($row,$col)->getCellStatus()==false &&
+            in_array($this->checkArea($row,$col),$this->reviveRule)) {
             $this->map->getItem($row,$col)->changeChanging();
         }
     }
