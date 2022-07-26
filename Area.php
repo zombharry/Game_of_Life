@@ -1,28 +1,5 @@
 <?php
 
-/*
-$test=new Cell();
-
-$test->setToAlive();
-var_dump($test->getCellStatus());
-
-*/
-
-/*
-$area=array();
-for ($i=$row; $i <=($row*(-1)); $i++) { 
-    $area[$i]=array();
-    for ($j=$col; $j <=($col*(-1)); $j++) { 
-        $area[$i][$j]=new Cell();
-    }
-    $area[$i][-26]=&$area[$i][25];
-    $area[$i][26]=&$area[$i][-25];
-}
-
-$area[12][25]->setToAlive();
-
-*/
-
 class Area
 {
    protected $row;

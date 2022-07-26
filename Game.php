@@ -1,18 +1,21 @@
 <?php
 require 'Area.php';
 require 'Cell.php';
+require 'FileHandler.php';
 
 
 ///////////         FILL UP THE AREA          /////////////
 class Game 
 {
     public $map;
-    public $dyingRule;
+    //Rules for the survival
+    public $livingRule;
+    //Rules for the revival
     public $reviveRule;
-    function __construct(int $rownum,int $colnum, array $dyingArray,array $revivingArray)
+    function __construct(int $rownum,int $colnum, array $livingArray,array $revivingArray,array $livingCellCoords)
     {
         $this->map=new Area($rownum,$colnum);
-        $this->dyingRule=$dyingArray;
+        $this->livingRule=$livingArray;
         $this->reviveRule=$revivingArray;
         $negativerow=$this->map->getRowNum()*(-1);
         $negativecol=$this->map->getColNum()*(-1);
@@ -22,14 +25,15 @@ class Game
         { 
             for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
                 $this->map->addItem($i,$j,new Cell());
+                
             }
         }
+
+        for ($i=0; $i < count($livingCellCoords); $i++) { 
+            $this->map->getItem($livingCellCoords[$i][0],$livingCellCoords[$i][1])->changeStatus();
+        }
+
     }
-
-
-
-///////////////////////////////////////////////////////
-
 
 
 
@@ -46,6 +50,7 @@ class Game
         return $numberOfLiving;
     }
 
+    //Return the number of living cells in the same row
     function checkHorizontalNeighbours(int $row,int $col)
     {
         $col--;
@@ -59,6 +64,7 @@ class Game
         return $numberOfLiving;
     }
 
+    //return the number of living neighbours around the cell
     function checkArea(int $row,int $col){
         $numberOfLiving=0;
         $numberOfLiving=$numberOfLiving+$this->checkHorizontalNeighbours($row,$col);
@@ -69,13 +75,29 @@ class Game
     }
 
     function ruleCheck(int $row,int $col){
-        if (in_array($this->checkArea($row,$col),$this->dyingRule)) {
+        if ($this->map->getItem($row,$col)->getCellStatus()==true &&
+            !(in_array($this->checkArea($row,$col),$this->livingRule))) {
             $this->map->getItem($row,$col)->changeChanging();
         }
-        elseif (in_array($this->checkArea($row,$col),$this->reviveRule)) {
+        elseif ($this->map->getItem($row,$col)->getCellStatus()==false &&
+            in_array($this->checkArea($row,$col),$this->reviveRule)) {
             $this->map->getItem($row,$col)->changeChanging();
         }
     }
+
+    function scan()
+    {
+        $negativerow=$this->map->getRowNum()*(-1);
+        $negativecol=$this->map->getColNum()*(-1);
+
+        for ($i=$negativerow; $i <=$this->map->getRowNum(); $i++) 
+        { 
+            for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
+                $this->ruleCheck($i,$j);
+            }
+        }
+    }
+
     function endRound()
     {
         $negativerow=$this->map->getRowNum()*(-1);
@@ -87,6 +109,7 @@ class Game
                 if ($this->map->getItem($i,$j)->getChanging()) {
 
                     $this->map->getItem($i,$j)->changeStatus();
+                    $this->map->getItem($i,$j)->changeChanging();
                 }
             }
         }
