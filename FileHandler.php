@@ -9,6 +9,7 @@ $rowandcol=preg_split("/[\s,]+/",$config);
 
 $livingArray;
 $reviveArray;
+$livingCellCoords=array();
 $life=file_get_contents("./files/test.lif",true);
 
 $rules=preg_split("/(\r\n|\n|\r)/",$life);
@@ -28,10 +29,29 @@ if ($rules[0]=="#Life 1.05") {
         $ruleString=preg_split("/\//",substr($rules[$i],3));
         $livingArray=str_split($ruleString[0]);
         $reviveArray=str_split($ruleString[1]);
-
+    }
+    $i++;
+    $coords=preg_split("/[\s,]+/",$rules[$i]);
+    $x_coord=$coords[1];
+    $y_coord=$coords[2];
+    $lineSince_P=0;
+    $i++;
+    while($i<$numOfLines)
+    {
         
+        $line=str_split($rules[$i],1);
+        $lineLength=count($line);
+        $j=0;
+        if ($line[$j]=='*') {
+            array_push($livingCellCoords,array($x_coord+$lineSince_P,$y_coord+$j));
+        }
+        $i++;
+        $lineSince_P++;
 
     }
-    var_dump($livingArray);
+    
+
+    var_dump(str_split($rules[5],1));
+
 }
 ?>
