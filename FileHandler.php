@@ -18,7 +18,7 @@ function __construct(string $filepath)
 {
     $config=file_get_contents("./files/config.txt",true);
 
-    $this->rowandcol==preg_split("/[\s,]+/",$config);
+    $this->rowandcol=preg_split("/[\s,]+/",$config);
 
     $this->livingCellCoords=array();
 

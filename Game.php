@@ -1,7 +1,7 @@
 <?php
 require 'Area.php';
 require 'Cell.php';
-require 'FileHandler.php';
+
 
 
 ///////////         FILL UP THE AREA          /////////////
