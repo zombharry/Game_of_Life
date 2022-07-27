@@ -11,4 +11,4 @@
 <body>
     <header class="myheader"></header>
     <div>
-        <table>
+        <table class="mytable">

@@ -7,15 +7,22 @@ $fh=new FileHandler("./files/test.lif");
 
 $game=new Game($fh->rowandcol[0],$fh->rowandcol[1],$fh->livingArray,$fh->reviveArray,$fh->livingCellCoords);
 
-//var_dump($game);
 
 require 'header.partial.php'; 
 
-for ($i=0; $i <$game->map->getRowNum(); $i++) { 
+
+for ($i=$game->map->getRowNum(); $i >=(-1)*($game->map->getRowNum()); $i--) { 
     echo '<tr>';
-    for ($j=0; $j <$game->map->getColNum(); $j++)
+    for ($j=(-1)*($game->map->getColNum()); $j <=$game->map->getColNum(); $j++)
     {
-        echo "<td></td>";
+        if (in_array(array($i,$j),$game->getLivingCoords())) {
+            echo "<td class='colored'>$i $j</td>";
+        }
+        else
+        {
+            echo "<td>$i $j</td>";
+        }
+        
     }
     echo '</tr>';
 }

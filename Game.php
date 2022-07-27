@@ -12,8 +12,11 @@ class Game
     public $livingRule;
     //Rules for the revival
     public $reviveRule;
+
+    public $generation;
     function __construct(int $rownum,int $colnum, array $livingArray,array $revivingArray,array $livingCellCoords)
     {
+        $this->generation=0;
         $this->map=new Area($rownum,$colnum);
         $this->livingRule=$livingArray;
         $this->reviveRule=$revivingArray;
@@ -98,6 +101,25 @@ class Game
         }
     }
 
+    //return a multidimensional array with the coordinates of the living
+    function getLivingCoords()
+    {
+        $negativerow=$this->map->getRowNum()*(-1);
+        $negativecol=$this->map->getColNum()*(-1);
+        $livingCellCoords=array();
+
+        for ($i=$negativerow; $i <=$this->map->getRowNum(); $i++) 
+        { 
+            for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
+                if ($this->map->getItem($i,$j)->getCellStatus()) {
+
+                    array_push($livingCellCoords,array($i,$j));
+                }
+            }
+        }
+        return $livingCellCoords;
+    }
+
     function endRound()
     {
         $negativerow=$this->map->getRowNum()*(-1);
@@ -114,6 +136,14 @@ class Game
             }
         }
     }
+    function nextRound()
+    {
+        $this->scan();
+        $this->endRound();
+        $this->generation++;
+
+    }
+    
 
 
 }

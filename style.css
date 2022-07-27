@@ -45,6 +45,7 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
+    height: 750px;
 }
 td{
     border: 1px solid black;
@@ -58,4 +59,7 @@ td{
     width: 100%;
     height: 30px;
     background-color:darkgray ;
+}
+.colored{
+    background-color: rgba(19, 16, 16, 0.651);
 }
