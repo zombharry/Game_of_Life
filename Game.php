@@ -1,50 +1,54 @@
 <?php
 require 'Area.php';
 require 'Cell.php';
+require 'FileHandler.php';
 
 
 
 ///////////         FILL UP THE AREA          /////////////
-class Game 
+class Game
 {
-    public $map;
-    //Rules for the survival
-    public $livingRule;
-    //Rules for the revival
-    public $reviveRule;
 
-    public $generation;
-    function __construct(int $rownum,int $colnum, array $livingArray,array $revivingArray,array $livingCellCoords)
+
+    public static $map;
+    //Rules for the survival
+    public static $livingRule;
+    //Rules for the revival
+    public static $reviveRule;
+
+    static function init()
     {
-        $this->generation=0;
-        $this->map=new Area($rownum,$colnum);
-        $this->livingRule=$livingArray;
-        $this->reviveRule=$revivingArray;
-        $negativerow=$this->map->getRowNum()*(-1);
-        $negativecol=$this->map->getColNum()*(-1);
+
+        //$this->generation=0;
+        self::$map=new Area(FileHandler::$rowandcol[0],FileHandler::$rowandcol[1]);
+    
+        self::$livingRule=FileHandler::$livingArray;
+        self::$reviveRule=FileHandler::$reviveArray;
+        $negativerow= self::$map->getRowNum()*(-1);
+        $negativecol= self::$map->getColNum()*(-1);
 
         
-        for ($i=$negativerow; $i <=$this->map->getRowNum(); $i++) 
+        for ($i=$negativerow; $i <= self::$map->getRowNum(); $i++) 
         { 
-            for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
-                $this->map->addItem($i,$j,new Cell());
+            for ($j=$negativecol; $j <= self::$map->getColNum(); $j++) { 
+                self::$map->addItem($i,$j,new Cell());
                 
             }
         }
 
-        for ($i=0; $i < count($livingCellCoords); $i++) { 
-            $this->map->getItem($livingCellCoords[$i][0],$livingCellCoords[$i][1])->changeStatus();
+        for ($i=0; $i < count(FileHandler::$livingCellCoords); $i++) { 
+            self::$map->getItem(FileHandler::$livingCellCoords[$i][0],FileHandler::$livingCellCoords[$i][1])->changeStatus();
         }
 
     }
 
 
 
-    function checkThreeInRow(int $row,int $col)
+    private static function checkThreeInRow(int $row,int $col)
     {
         $numberOfLiving=0;
         for ($i=0; $i < 3; $i++) { 
-            if ($this->map->getItem($row,$col)->getCellStatus()) {
+            if (self::$map->getItem($row,$col)->getCellStatus()) {
                 $numberOfLiving++;
             }
             $col++;
@@ -54,12 +58,12 @@ class Game
     }
 
     //Return the number of living cells in the same row
-    function checkHorizontalNeighbours(int $row,int $col)
+    private static function checkHorizontalNeighbours(int $row,int $col)
     {
         $col--;
         $numberOfLiving=0;
         for ($i=0; $i < 2; $i++) { 
-            if ($this->map->getItem($row,$col)->getCellStatus()) {
+            if (self::$map->getItem($row,$col)->getCellStatus()) {
                 $numberOfLiving++;
             }
             $col=$col+2;
@@ -68,50 +72,50 @@ class Game
     }
 
     //return the number of living neighbours around the cell
-    function checkArea(int $row,int $col){
+    private static function checkArea(int $row,int $col){
         $numberOfLiving=0;
-        $numberOfLiving=$numberOfLiving+$this->checkHorizontalNeighbours($row,$col);
-        $numberOfLiving=$numberOfLiving+$this->checkThreeInRow($row+1,$col-1);
-        $numberOfLiving=$numberOfLiving+$this->checkThreeInRow($row-1,$col-1);
+        $numberOfLiving=$numberOfLiving+self::checkHorizontalNeighbours($row,$col);
+        $numberOfLiving=$numberOfLiving+self::checkThreeInRow($row+1,$col-1);
+        $numberOfLiving=$numberOfLiving+self::checkThreeInRow($row-1,$col-1);
         
         return $numberOfLiving;
     }
 
-    function ruleCheck(int $row,int $col){
-        if ($this->map->getItem($row,$col)->getCellStatus()==true &&
-            !(in_array($this->checkArea($row,$col),$this->livingRule))) {
-            $this->map->getItem($row,$col)->changeChanging();
+    private static function ruleCheck(int $row,int $col){
+        if (self::$map->getItem($row,$col)->getCellStatus()==true &&
+            !(in_array(self::checkArea($row,$col),self::$livingRule))) {
+                self::$map->getItem($row,$col)->changeChanging();
         }
-        elseif ($this->map->getItem($row,$col)->getCellStatus()==false &&
-            in_array($this->checkArea($row,$col),$this->reviveRule)) {
-            $this->map->getItem($row,$col)->changeChanging();
+        elseif (self::$map->getItem($row,$col)->getCellStatus()==false &&
+            in_array(self::checkArea($row,$col),self::$reviveRule)) {
+                self::$map->getItem($row,$col)->changeChanging();
         }
     }
 
-    function scan()
+    private static function scan()
     {
-        $negativerow=$this->map->getRowNum()*(-1);
-        $negativecol=$this->map->getColNum()*(-1);
+        $negativerow=self::$map->getRowNum()*(-1);
+        $negativecol=self::$map->getColNum()*(-1);
 
-        for ($i=$negativerow; $i <=$this->map->getRowNum(); $i++) 
+        for ($i=$negativerow; $i <=self::$map->getRowNum(); $i++) 
         { 
-            for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
-                $this->ruleCheck($i,$j);
+            for ($j=$negativecol; $j <=self::$map->getColNum(); $j++) { 
+                self::ruleCheck($i,$j);
             }
         }
     }
 
     //return a multidimensional array with the coordinates of the living
-    function getLivingCoords()
+    static function getLivingCoords()
     {
-        $negativerow=$this->map->getRowNum()*(-1);
-        $negativecol=$this->map->getColNum()*(-1);
+        $negativerow=self::$map->getRowNum()*(-1);
+        $negativecol=self::$map->getColNum()*(-1);
         $livingCellCoords=array();
 
-        for ($i=$negativerow; $i <=$this->map->getRowNum(); $i++) 
+        for ($i=$negativerow; $i <=self::$map->getRowNum(); $i++) 
         { 
-            for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
-                if ($this->map->getItem($i,$j)->getCellStatus()) {
+            for ($j=$negativecol; $j <=self::$map->getColNum(); $j++) { 
+                if (self::$map->getItem($i,$j)->getCellStatus()) {
 
                     array_push($livingCellCoords,array($i,$j));
                 }
@@ -120,32 +124,32 @@ class Game
         return $livingCellCoords;
     }
 
-    function endRound()
+    private static function endRound()
     {
-        $negativerow=$this->map->getRowNum()*(-1);
-        $negativecol=$this->map->getColNum()*(-1);
+        $negativerow=self::$map->getRowNum()*(-1);
+        $negativecol=self::$map->getColNum()*(-1);
 
-        for ($i=$negativerow; $i <=$this->map->getRowNum(); $i++) 
+        for ($i=$negativerow; $i <=self::$map->getRowNum(); $i++) 
         { 
-            for ($j=$negativecol; $j <=$this->map->getColNum(); $j++) { 
-                if ($this->map->getItem($i,$j)->getChanging()) {
+            for ($j=$negativecol; $j <=self::$map->getColNum(); $j++) { 
+                if (self::$map->getItem($i,$j)->getChanging()) {
 
-                    $this->map->getItem($i,$j)->changeStatus();
-                    $this->map->getItem($i,$j)->changeChanging();
+                    self::$map->getItem($i,$j)->changeStatus();
+                    self::$map->getItem($i,$j)->changeChanging();
                 }
             }
         }
     }
-    function nextRound()
+    static function nextRound()
     {
-        $this->scan();
-        $this->endRound();
-        $this->generation++;
-
+        self::scan();
+        self::endRound();
     }
     
 
 
 }
+
+Game::init();
 
 ?>

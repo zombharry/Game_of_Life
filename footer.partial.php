@@ -1,6 +1,6 @@
-</table>
-    </div>
 
+    
+    </div>
     <footer class="myfooter">
         <button id="auto">Auto</button>
         <button id="next">Next</button>

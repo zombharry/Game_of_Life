@@ -1,11 +1,21 @@
 $(document).ready(function () {
-    $.ajax({
-        type: "post",
-        url: "url",
-        data: "data",
-        dataType: "dataType",
-        success: function (html) {
-            
-        }
-    });    
+    $('#next').on('click', function () {
+        rownum=$("#rownum").val();
+        colnum=$("#colnum").val();
+        
+        $.ajax({
+            type: "GET",
+            url: "display.php",
+            cache:false,
+            data: {rownum:rownum,colnum:colnum},
+            success: function (result) {
+                $('#display_table').html(result);
+                rownum=undefined;
+                
+                console.log(rownum);
+                
+            }
+        });    
+    });
+    
 });

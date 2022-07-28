@@ -18,7 +18,7 @@ class Cell {
     }
     public function getChanging()
     {
-        return $this->alive;
+        return $this->changing;
     }
 
     public function changeStatus(){

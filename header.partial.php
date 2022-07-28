@@ -9,6 +9,7 @@
     
 </head>
 <body>
-    <header class="myheader"></header>
-    <div>
-        <table class="mytable">
+    <header class="myheader">
+    </header>
+    <div id="display_table">
+        
