@@ -1,52 +1,42 @@
 <?php
-require 'Game.php';
+require_once 'Game.php';
 
 
+if(isset($_GET['ajax']) && $_GET['ajax']=='ajax'){
 
-if (isset($_GET['rownum'])) {
     Game::nextRound();
-    echo display($_GET['rownum'],$_GET['colnum'],Game::getLivingCoords());
+    echo display(Game::$map->getRowNum(),Game::$map->getColNum(),Game::getLivingCoords());
+ 
     
-    //display();
 }
 
-/*
-function display()
-{
-    echo json_encode(Game::getLivingCoords());
-    echo "<input type='hidden' id='rownum' value=".Game::$map->getRowNum().">";
-    echo "<input type='hidden' id='colnum' value=".Game::$map->getColNum().">";
 
-}
-*/
 
 function display($rownum,$colnum,array $coords)
 {
     
-    $display_string="<table class='mytable'>";
+    
+    $display_string="<table id='mytable'>";
 
-for ($i=$rownum; $i >=(-1)*($rownum); $i--) { 
-    $display_string=$display_string.'<tr>';
-    for ($j=(-1)*($colnum); $j <=$colnum; $j++)
-    {
-        if (in_array(array($i,$j),$coords)) {
-            $display_string=$display_string. "<td class='colored'>$i $j</td>";
-        }
-        else
+    for ($i=$rownum; $i >=(-1)*($rownum); $i--) { 
+        $display_string=$display_string.'<tr>';
+        for ($j=(-1)*($colnum); $j <=$colnum; $j++)
         {
-            $display_string=$display_string. "<td>$i $j</td>";
+            if (in_array(array($i,$j),$coords)) {
+                $display_string=$display_string. "<td class='colored'>$i $j</td>";
+            }
+            else
+            {
+                $display_string=$display_string. "<td>$i $j</td>";
+            }
+            
         }
-        
+        $display_string=$display_string. '</tr>';
     }
-    $display_string=$display_string. '</tr>';
-}
-$display_string=$display_string. "</table>";
-
-$display_string=$display_string."<input type='hidden' id='rownum' value=".$rownum.">";
-$display_string=$display_string."<input type='hidden' id='colnum' value=".$colnum.">";
+    $display_string=$display_string. "</table>";
 
 
-return $display_string;
+    return $display_string;
 }
 
 

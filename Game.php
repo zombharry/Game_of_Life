@@ -16,10 +16,12 @@ class Game
     //Rules for the revival
     public static $reviveRule;
 
+    public static $gen;
+
     static function init()
     {
 
-        //$this->generation=0;
+        self::$gen=0;
         self::$map=new Area(FileHandler::$rowandcol[0],FileHandler::$rowandcol[1]);
     
         self::$livingRule=FileHandler::$livingArray;
