@@ -1,4 +1,5 @@
 <?php
+namespace Game_of_life{
 
 class Area
 {
@@ -13,6 +14,7 @@ class Area
     $negativecol=$col*(-1);
 
     $this->area=array();
+    //$j=$negativecol; $j <=$negativecol; $j++
     for ($i=$negativerow; $i <=$row; $i++) 
     { 
         $this->area[$i]=array();
@@ -58,7 +60,7 @@ class Area
    private function overlap($original,$gotValue)
    {
     if ($gotValue>=0) {
-        if ($gotValue>$original) {
+        if ($gotValue>$original && $gotValue%$original!=0) {
             $gotValue=($gotValue%($original))-$original-1;
         }
         else{
@@ -67,11 +69,11 @@ class Area
     }
     else{
         $gotValue=$gotValue*(-1);
-        if ($gotValue>$original) {
+        if ($gotValue>$original && $gotValue%$original!=0) {
             $gotValue=(-1)*(($gotValue%($original))-$original-1);
         }
         else{
-            $gotValue=$gotValue%($original+1);
+            $gotValue=(-1)*($gotValue%($original+1));
         }
     }
     
@@ -80,5 +82,5 @@ class Area
    }
 
 }
-
+}
 ?>
