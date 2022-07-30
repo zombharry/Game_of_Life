@@ -1,16 +1,24 @@
 <?php
+namespace Game_of_life{
 
 require 'display.php';
 
 require 'header.partial.php'; 
 
-echo '<div name="display_table" id="display_table">';
+require_once 'Game.php';
 
-echo display(Game::$map->getRowNum(),Game::$map->getColNum(),Game::getLivingCoords());
+$game=new Game();
 
 
+
+echo '<div id="display_table">';
+
+
+echo display($game->getLivingCoords());
+
+
+//display();
 echo "</div>";
 require 'footer.partial.php';
-
-
+}
 ?>

@@ -1,4 +1,5 @@
 <?php
+namespace Game_of_life{
 
 class Area
 {
@@ -18,7 +19,7 @@ class Area
     { 
         $this->area[$i]=array();
         for ($j=$negativecol; $j <=$negativecol; $j++) { 
-            $this->area[$i][$j]=new stdClass();
+            $this->area[$i][$j]=null;
         }
     }
 
@@ -42,7 +43,7 @@ class Area
 
    function removeItem(int $row,int $col)
    {
-    $this->area[$row][$col]=new stdClass();
+    $this->area[$row][$col]=null;
    }
 
    function getRowNum()
@@ -81,5 +82,5 @@ class Area
    }
 
 }
-
+}
 ?>
